@@ -17,12 +17,12 @@ Then open the local address shown by Vite.
 
 ```text
 src/
-├── components/   Reusable pieces such as the header and product cards
+├── components/   Reusable pieces with co-located JSX and CSS files
 ├── context/      Shared account, cart, and order state
 ├── data/         Mock catalogue data
 ├── pages/        Route level screens
 ├── services/     Browser storage helpers
-├── styles/       Shared design system and responsive CSS
+├── styles/       Shared design tokens, reset, and reusable utilities
 ├── App.jsx       Route definitions
 └── main.jsx      React entry point and providers
 ```
@@ -46,6 +46,7 @@ The code follows patterns from the official React documentation:
 2. `src/pages/ShopPage.jsx` for controlled filters and derived data.
 3. `src/context/StoreContext.jsx` for shared state and immutable array updates.
 4. `src/App.jsx` for the relationship between routes and pages.
+5. The CSS file next to each component or page for its responsive visual styles.
 
 ## Backend upgrade path
 

@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import ScrollToTop from '../components/ScrollToTop';
 import { useStore } from '../context/StoreContext';
 import { formatCurrency } from '../utils/format';
+import './CheckoutPage.css';
 
 const initialForm = {
   name: '',

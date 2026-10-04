@@ -1,0 +1,24 @@
+.toast {
+  position: fixed;
+  right: 1.4rem;
+  bottom: 1.4rem;
+  z-index: 100;
+  display: flex;
+  padding: .9rem 1.1rem;
+  align-items: center;
+  gap: .65rem;
+  border-radius: 999px;
+  background: var(--wine-dark);
+  color: white;
+  box-shadow: var(--shadow);
+  font-size: .82rem;
+}
+
+.toast__icon {
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--rose);
+}

@@ -2,6 +2,7 @@ import { Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { formatCurrency } from '../utils/format';
+import './ProductCard.css';
 
 export default function ProductCard({ product }) {
   const { addToCart } = useStore();

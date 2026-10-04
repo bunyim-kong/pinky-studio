@@ -3,6 +3,7 @@ import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { products } from '../data/products';
 import { formatCurrency, pluralize } from '../utils/format';
+import './AccountPage.css';
 
 export default function AccountPage() {
   const { user, orders, logout } = useStore();

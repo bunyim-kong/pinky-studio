@@ -5,6 +5,7 @@ import ProductGrid from '../components/ProductGrid';
 import { useStore } from '../context/StoreContext';
 import { products } from '../data/products';
 import { formatCurrency } from '../utils/format';
+import './ProductPage.css';
 
 export default function ProductPage() {
   const { productId } = useParams();

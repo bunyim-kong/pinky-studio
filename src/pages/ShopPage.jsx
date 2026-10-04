@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import ProductGrid from '../components/ProductGrid';
 import { categories, products } from '../data/products';
 import { pluralize } from '../utils/format';
+import './ShopPage.css';
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();

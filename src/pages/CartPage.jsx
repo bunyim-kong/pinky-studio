@@ -2,6 +2,7 @@ import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { formatCurrency } from '../utils/format';
+import './CartPage.css';
 
 export default function CartPage() {
   const { user, cartLines, cartSubtotal, shipping, cartTotal, updateQuantity, removeFromCart } = useStore();

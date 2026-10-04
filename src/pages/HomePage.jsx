@@ -2,6 +2,7 @@ import { ArrowRight, Droplets, Leaf, ShieldCheck, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom';
 import ProductGrid from '../components/ProductGrid';
 import { featuredProducts, newArrivals } from '../data/products';
+import './HomePage.css';
 
 const categoryCards = [
   { name: 'Cleanse', category: 'Cleansers', image: featuredProducts[0].image },

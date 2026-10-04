@@ -1,4 +1,5 @@
 import ProductCard from './ProductCard';
+import './ProductGrid.css';
 
 export default function ProductGrid({ products: productList }) {
   if (productList.length === 0) {

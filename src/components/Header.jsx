@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { pluralize } from '../utils/format';
+import './Header.css';
 
 const navItems = [
   { label: 'Shop', to: '/shop' },

@@ -2,6 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { products } from '../data/products';
 import { pluralize } from '../utils/format';
+import './InfoPages.css';
 
 export function BrandsPage() {
   const brands = [...new Set(products.map((product) => product.brand))];

@@ -104,46 +104,24 @@ export default function Header() {
       <div className="announcement">Complimentary delivery on orders over $80</div>
       <header className="site-header" ref={headerRef}>
         <div className="container header__inner">
-          <button
-            className="icon-button mobile-only"
-            type="button"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
-            aria-controls="main-navigation"
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            {menuOpen ? <X /> : <Menu />}
+          <button className="icon-button mobile-only" type="button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="main-navigation" onClick={() => setMenuOpen((open) => !open)}> {menuOpen ? <X /> : <Menu />}
           </button>
 
           <Link className="wordmark" to="/" aria-label="Pinky Studio home">
             Pinky <span>Studio</span>
           </Link>
 
-          <nav
-            id="main-navigation"
-            className={`main-nav ${menuOpen ? 'main-nav--open' : ''}`}
-            aria-label="Main navigation"
-            style={{ '--mobile-menu-top': `${menuTop}px` }}
-          >
+          <nav id="main-navigation" className={`main-nav ${menuOpen ? 'main-nav--open' : ''}`} aria-label="Main navigation" style={{ '--mobile-menu-top': `${menuTop}px` }}>
+
             <form className="mobile-nav-search" onSubmit={submitSearch}>
               <Search aria-hidden="true" />
               <label className="sr-only" htmlFor="mobile-site-search">Search products</label>
-              <input
-                id="mobile-site-search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search skincare"
-              />
+              <input id="mobile-site-search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search skincare"/>
               <button type="submit">Search</button>
             </form>
+            
             {navItems.map((item) => (
-              <NavLink
-                key={item.label}
-                to={item.to}
-                onClick={() => setMenuOpen(false)}
-                className={() => (isNavActive(item) ? 'active' : '')}
-              >
-                {item.label}
+              <NavLink key={item.label} to={item.to} onClick={() => setMenuOpen(false)} className={() => (isNavActive(item) ? 'active' : '')}> {item.label}
               </NavLink>
             ))}
           </nav>
@@ -152,9 +130,11 @@ export default function Header() {
             <button ref={searchButtonRef} className="icon-button desktop-only" type="button" aria-label="Search" onClick={() => setSearchOpen(true)}>
               <Search />
             </button>
+
             <Link className="icon-button" to={user ? '/account' : '/login'} aria-label={user ? 'Your account' : 'Sign in'}>
               <UserRound />
             </Link>
+
             <Link className="icon-button bag-button" to="/cart" aria-label={`Shopping bag with ${cartCount} ${pluralize(cartCount, 'item')}`}>
               <ShoppingBag />
               {cartCount > 0 && <span>{cartCount}</span>}

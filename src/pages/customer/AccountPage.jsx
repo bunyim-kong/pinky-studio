@@ -1,12 +1,11 @@
 import { LogOut, PackageCheck, UserRound } from 'lucide-react';
 import { Link, Navigate, useSearchParams } from 'react-router-dom';
-import { useStore } from '../context/StoreContext';
-import { products } from '../data/products';
-import { formatCurrency, pluralize } from '../utils/format';
+import { useStore } from '../../context/StoreContext';
+import { formatCurrency, pluralize } from '../../utils/format';
 import './AccountPage.css';
 
 export default function AccountPage() {
-  const { user, orders, logout } = useStore();
+  const { user, orders, logout, products } = useStore();
   const [searchParams] = useSearchParams();
   if (!user) return <Navigate to="/login" replace />;
 

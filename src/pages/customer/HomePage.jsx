@@ -1,16 +1,20 @@
 import { ArrowRight, Droplets, Leaf, ShieldCheck, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import ProductGrid from '../components/ProductGrid';
-import { featuredProducts, newArrivals } from '../data/products';
+import ProductGrid from '../../components/ProductGrid';
+import { useStore } from '../../context/StoreContext';
 import './HomePage.css';
 
-const categoryCards = [
-  { name: 'Cleanse', category: 'Cleansers', image: featuredProducts[0].image },
-  { name: 'Treat', category: 'Serums', image: featuredProducts[2].image },
-  { name: 'Moisturize', category: 'Moisturizers', image: featuredProducts[3].image },
-];
-
 export default function HomePage() {
+  const { products, categories } = useStore();
+  const featuredProducts = products.slice(0, 4);
+  const newArrivals = [...products]
+    .sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt))
+    .slice(0, 4);
+  const categoryCards = categories.slice(0, 3).map((category) => ({
+    name: category.replace(/s$/i, ''),
+    category,
+    image: products.find((product) => product.category === category)?.image,
+  })).filter((card) => card.image);
   return (
     <>
       <section className="hero">

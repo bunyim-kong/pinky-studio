@@ -31,6 +31,7 @@ export default function Footer() {
           <Link to="/about">Our story</Link>
           <Link to="/support">Shipping and returns</Link>
           <Link to="/support">Contact</Link>
+          <Link to="/admin">Store admin</Link>
         </div>
         <div>
           <h2>Stay close</h2>

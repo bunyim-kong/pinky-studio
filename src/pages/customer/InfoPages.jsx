@@ -1,10 +1,11 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { products } from '../data/products';
-import { pluralize } from '../utils/format';
+import { useStore } from '../../context/StoreContext';
+import { pluralize } from '../../utils/format';
 import './InfoPages.css';
 
 export function BrandsPage() {
+  const { products } = useStore();
   const brands = [...new Set(products.map((product) => product.brand))];
   return (
     <div className="container info-page">

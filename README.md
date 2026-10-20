@@ -1,6 +1,6 @@
 # Pinky Studio React Storefront
 
-Pinky Studio is a beginner friendly React project based on the supplied website requirements. It includes a responsive storefront, product search and filters, product details, account gated cart, demo checkout, and local order history.
+Pinky Studio is a beginner friendly React project based on the supplied website requirements. It includes a responsive storefront, product search and filters, product details, account gated cart, demo checkout, local order history, and a catalog admin.
 
 The project uses mock data and `localStorage`. No real payment or customer information is sent anywhere.
 
@@ -13,18 +13,24 @@ npm run dev
 
 Then open the local address shown by Vite.
 
+Open `/admin` to create, edit, and remove products or categories. Catalog changes are saved in `localStorage` and appear immediately throughout the storefront, including in other open tabs.
+
 ## Project structure
 
 ```text
 src/
-├── components/   Reusable pieces with co-located JSX and CSS files
-├── context/      Shared account, cart, and order state
-├── data/         Mock catalogue data
-├── pages/        Route level screens
-├── services/     Browser storage helpers
-├── styles/       Shared design tokens, reset, and reusable utilities
-├── App.jsx       Route definitions
-└── main.jsx      React entry point and providers
+├── components/       Shared storefront components
+│   └── admin/        Reusable admin components
+├── context/          Shared account, cart, catalog, and order state
+├── data/             Initial catalog data
+├── layouts/          Separate customer and admin route shells
+├── pages/
+│   ├── admin/        Admin product and category pages
+│   └── customer/     Storefront, account, cart, and checkout pages
+├── services/         Browser storage helpers
+├── styles/           Shared design tokens and utilities
+├── App.jsx           Route definitions
+└── main.jsx          React entry point and providers
 ```
 
 ## React ideas used here

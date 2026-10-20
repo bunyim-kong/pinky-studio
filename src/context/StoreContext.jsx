@@ -1,10 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { products } from '../data/products';
+import { categories as seedCategories, products as seedProducts } from '../data/products';
 import { readStorage, writeStorage } from '../services/storage';
 
 const StoreContext = createContext(null);
 
 export function StoreProvider({ children }) {
+  const [products, setProducts] = useState(() => readStorage('pinky-products', seedProducts));
+  const [categories, setCategories] = useState(() =>
+    readStorage('pinky-categories', seedCategories.filter((category) => category !== 'All')),
+  );
   const [user, setUser] = useState(() => readStorage('pinky-user', null));
   const [cart, setCart] = useState(() =>
     user ? readStorage(`pinky-cart:${user.email.toLowerCase()}`, []) : [],
@@ -22,6 +26,37 @@ export function StoreProvider({ children }) {
   useEffect(() => {
     writeStorage('pinky-orders', allOrders);
   }, [allOrders]);
+  useEffect(() => {
+    writeStorage('pinky-products', products);
+  }, [products]);
+  useEffect(() => {
+    writeStorage('pinky-categories', categories);
+  }, [categories]);
+  useEffect(() => {
+    function syncCatalog(event) {
+      if (!event.newValue) return;
+      try {
+        if (event.key === 'pinky-products') {
+          setProducts((currentProducts) =>
+            JSON.stringify(currentProducts) === event.newValue
+              ? currentProducts
+              : JSON.parse(event.newValue),
+          );
+        }
+        if (event.key === 'pinky-categories') {
+          setCategories((currentCategories) =>
+            JSON.stringify(currentCategories) === event.newValue
+              ? currentCategories
+              : JSON.parse(event.newValue),
+          );
+        }
+      } catch {
+        // Ignore malformed values written outside the app.
+      }
+    }
+    window.addEventListener('storage', syncCatalog);
+    return () => window.removeEventListener('storage', syncCatalog);
+  }, []);
 
   useEffect(() => {
     if (!notice) return undefined;
@@ -61,6 +96,98 @@ export function StoreProvider({ children }) {
 
   function removeFromCart(productId) {
     setCart((currentCart) => currentCart.filter((item) => item.productId !== productId));
+  }
+
+  function createProduct(product) {
+    const normalizedName = product.name.trim();
+    const baseId = normalizedName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '') || 'product';
+    let id = baseId;
+    let suffix = 2;
+    while (products.some((item) => item.id === id)) {
+      id = `${baseId}-${suffix}`;
+      suffix += 1;
+    }
+
+    const newProduct = {
+      ...product,
+      id,
+      name: normalizedName,
+      addedAt: new Date().toISOString().slice(0, 10),
+    };
+    setProducts((currentProducts) => [newProduct, ...currentProducts]);
+    setNotice(`${newProduct.name} was added`);
+    return newProduct;
+  }
+
+  function updateProduct(productId, updates) {
+    setProducts((currentProducts) =>
+      currentProducts.map((product) =>
+        product.id === productId ? { ...product, ...updates, id: productId } : product,
+      ),
+    );
+    setNotice(`${updates.name} was updated`);
+  }
+
+  function deleteProduct(productId) {
+    const product = products.find((item) => item.id === productId);
+    setProducts((currentProducts) => currentProducts.filter((item) => item.id !== productId));
+    setCart((currentCart) => currentCart.filter((item) => item.productId !== productId));
+    setNotice(`${product?.name ?? 'Product'} was removed`);
+  }
+
+  function createCategory(name) {
+    const normalizedName = name.trim();
+    if (!normalizedName) return { ok: false, message: 'Enter a category name.' };
+    if (normalizedName.toLowerCase() === 'all') {
+      return { ok: false, message: '“All” is reserved for the storefront filter.' };
+    }
+    if (categories.some((category) => category.toLowerCase() === normalizedName.toLowerCase())) {
+      return { ok: false, message: 'That category already exists.' };
+    }
+    setCategories((currentCategories) => [...currentCategories, normalizedName]);
+    setNotice(`${normalizedName} was added`);
+    return { ok: true };
+  }
+
+  function renameCategory(currentName, nextName) {
+    const normalizedName = nextName.trim();
+    if (!normalizedName) return { ok: false, message: 'Enter a category name.' };
+    if (normalizedName.toLowerCase() === 'all') {
+      return { ok: false, message: '“All” is reserved for the storefront filter.' };
+    }
+    if (
+      categories.some(
+        (category) => category !== currentName && category.toLowerCase() === normalizedName.toLowerCase(),
+      )
+    ) {
+      return { ok: false, message: 'That category already exists.' };
+    }
+    setCategories((currentCategories) =>
+      currentCategories.map((category) => category === currentName ? normalizedName : category),
+    );
+    setProducts((currentProducts) =>
+      currentProducts.map((product) =>
+        product.category === currentName ? { ...product, category: normalizedName } : product,
+      ),
+    );
+    setNotice(`${currentName} was renamed`);
+    return { ok: true };
+  }
+
+  function deleteCategory(name) {
+    const productCount = products.filter((product) => product.category === name).length;
+    if (productCount > 0) {
+      return {
+        ok: false,
+        message: `Move or remove the ${productCount} assigned product${productCount === 1 ? '' : 's'} first.`,
+      };
+    }
+    setCategories((currentCategories) => currentCategories.filter((category) => category !== name));
+    setNotice(`${name} was removed`);
+    return { ok: true };
   }
 
   function login({ email, name = 'Pinky customer' }) {
@@ -119,7 +246,7 @@ export function StoreProvider({ children }) {
           return product ? { ...item, product } : null;
         })
         .filter(Boolean),
-    [cart],
+    [cart, products],
   );
 
   const cartCount = cartLines.reduce((total, item) => total + item.quantity, 0);
@@ -135,6 +262,8 @@ export function StoreProvider({ children }) {
   );
 
   const value = {
+    products,
+    categories,
     user,
     cart,
     orders,
@@ -148,6 +277,12 @@ export function StoreProvider({ children }) {
     addToCart,
     updateQuantity,
     removeFromCart,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    createCategory,
+    renameCategory,
+    deleteCategory,
     login,
     logout,
     placeOrder,

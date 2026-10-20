@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #fffaf6;
+      color: #24171d;
+      font: 14px/1.55 system-ui;
+    }
+    h1 {
+      font: 30px Georgia;
+      margin: 0 0 12px;
+    }
+    p {
+      color: #716168;
+    }
+    button,
+    input {
+      font: inherit;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    button {
+      border: 0;
+      background: #5f1738;
+      color: white;
+      cursor: pointer;
+      width: 100%;
+      margin: 6px 0;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+    input {
+      border: 1px solid #e8ddde;
+      width: 100%;
+      margin: 6px 0;
+    }
+    small {
+      display: block;
+      color: #716168;
+    }
+    #status {
+      white-space: pre-wrap;
+      margin-top: 16px;
+    }
+    hr {
+      border: 0;
+      border-top: 1px solid #e8ddde;
+      margin: 20px 0;
+    }
+  </style>
+  <h1>Pinky Studio</h1>
+  <p>
+    Create a photo-rich, editable skincare storefront with blush, cream, and
+    burgundy colors.
+  </p>
+  <button id="build">Create 9 responsive screens</button
+  ><small
+    >Home, Shop, Product · 1440 / 768 / 390 px.<br />Creates a new page;
+    existing designs are preserved.</small
+  >
+  <hr />
+  <label for="width">Resize selected generated screen (320–1920 px)</label
+  ><input id="width" type="number" min="320" max="1920" value="390" /><button
+    id="resize"
+  >
+    Apply width &amp; responsive layout
+  </button>
+  <small
+    >While this plugin is open, dragging a generated screen's width also
+    switches its layout at 760 px. Native Auto Layout wraps grids even after
+    closing the plugin.</small
+  >
+  <div id="status" role="status">
+    Ready. Website photos are bundled for offline import.
+  </div>
+  <script>
+    const build = document.getElementById("build"),
+      resize = document.getElementById("resize"),
+      status = document.getElementById("status");
+    build.onclick = () => {
+      build.disabled = true;
+      parent.postMessage({ pluginMessage: { type: "build" } }, "*");
+    };
+    resize.onclick = () =>
+      parent.postMessage(
+        {
+          pluginMessage: {
+            type: "resize",
+            width: Number(document.getElementById("width").value),
+          },
+        },
+        "*",
+      );
+    onmessage = (e) => {
+      const m = e.data.pluginMessage;
+      if (!m) return;
+      status.textContent = m.message;
+      if (m.type === "done" || m.type === "error") build.disabled = false;
+    };
+  </script>
+</html>

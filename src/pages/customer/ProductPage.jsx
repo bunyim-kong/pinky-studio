@@ -1,16 +1,15 @@
 import { Minus, Plus, ShieldCheck, Star, Truck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import ProductGrid from '../components/ProductGrid';
-import { useStore } from '../context/StoreContext';
-import { products } from '../data/products';
-import { formatCurrency } from '../utils/format';
+import ProductGrid from '../../components/ProductGrid';
+import { useStore } from '../../context/StoreContext';
+import { formatCurrency } from '../../utils/format';
 import './ProductPage.css';
 
 export default function ProductPage() {
   const { productId } = useParams();
   const navigate = useNavigate();
-  const { addToCart, user } = useStore();
+  const { addToCart, products, user } = useStore();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const product = products.find((item) => item.id === productId);

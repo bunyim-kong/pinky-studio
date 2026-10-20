@@ -1,12 +1,13 @@
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import ProductGrid from '../components/ProductGrid';
-import { categories, products } from '../data/products';
-import { pluralize } from '../utils/format';
+import ProductGrid from '../../components/ProductGrid';
+import { useStore } from '../../context/StoreContext';
+import { pluralize } from '../../utils/format';
 import './ShopPage.css';
 
 export default function ShopPage() {
+  const { products, categories } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const selectedCategory = searchParams.get('category') ?? 'All';
@@ -16,6 +17,13 @@ export default function ShopPage() {
   const searchParamsString = searchParams.toString();
 
   useEffect(() => setSearchInput(urlSearch), [urlSearch]);
+
+  useEffect(() => {
+    if (selectedCategory === 'All' || categories.includes(selectedCategory)) return;
+    const nextParams = new URLSearchParams(searchParamsString);
+    nextParams.delete('category');
+    setSearchParams(nextParams, { replace: true });
+  }, [categories, searchParamsString, selectedCategory, setSearchParams]);
 
   useEffect(() => {
     if (searchInput === urlSearch) return undefined;
@@ -49,7 +57,7 @@ export default function ShopPage() {
       if (sort === 'newest') return new Date(b.addedAt) - new Date(a.addedAt);
       return b.rating - a.rating;
     });
-  }, [searchInput, selectedCategory, sort]);
+  }, [products, searchInput, selectedCategory, sort]);
 
   function clearFilters() {
     setSearchInput('');
@@ -97,7 +105,7 @@ export default function ShopPage() {
           </div>
           <div className="filter-group">
             <h2>Category</h2>
-            {categories.map((category) => (
+            {['All', ...categories].map((category) => (
               <label key={category}>
                 <input
                   type="radio"
